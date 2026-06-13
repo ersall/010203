@@ -933,13 +933,29 @@
 <script src="payments.js"></script>
 <script>
 /* Проверка доступа — не выкидывает при сбое сети/JSONBin */
-const hasAccess = document.cookie.indexOf('access_granted=1') !== -1 || localStorage.getItem('access_granted') === 'true';
-if (!hasAccess && !window.location.href.includes('bind.html')) {
-    window.location.href = '/bind.html';
+async function checkAccess() {
+    const hasLocalAccess = document.cookie.indexOf('access_granted=1') !== -1 || localStorage.getItem('access_granted') === 'true';
+    
+    if (!hasLocalAccess && !window.location.href.includes('bind.html') && !window.location.href.includes('kiru.html')) {
+        window.location.href = '/bind.html';
+        return;
+    }
+    
+    if (hasLocalAccess) {
+        try {
+            const r = await fetch('/.netlify/functions/check-access', { credentials: 'include' });
+            const data = await r.json();
+            if (!data.hasAccess) {
+                localStorage.removeItem('access_granted');
+                document.cookie = 'access_granted=; path=/; max-age=0';
+                document.cookie = 'access_name=; path=/; max-age=0';
+                alert('Ваш доступ был отозван. Получите новый код.');
+                window.location.href = '/bind.html';
+            }
+        } catch(e) {}
+    }
 }
-if (window.KaspiNotify && window.KaspiPin && KaspiPin.isUnlocked()) {
-  KaspiNotify.initNotifications("index");
-}
+checkAccess();
 
 /* ==============================================
    SKELETON HIDE (Kaspi main)
