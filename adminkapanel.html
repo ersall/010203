@@ -8,7 +8,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', -apple-system, sans-serif; background: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
-    .panel { width: 100%; max-width: 640px; background: #fff; border-radius: 24px; box-shadow: 0 4px 32px rgba(0,0,0,.06); overflow: hidden; }
+    .panel { width: 100%; max-width: 720px; background: #fff; border-radius: 24px; box-shadow: 0 4px 32px rgba(0,0,0,.06); overflow: hidden; }
     .panel-header { background: #0f172a; color: #fff; padding: 28px 32px; }
     .panel-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -.5px; }
     .panel-header p { font-size: 13px; color: #94a3b8; margin-top: 4px; }
@@ -70,7 +70,7 @@
 
 <div class="panel" id="loginBox">
   <div class="panel-header">
-    <h1>🔐 Панель управления</h1>
+    <h1>Панель управления</h1>
     <p>Введите пароль для входа</p>
   </div>
   <div class="panel-body login-box">
@@ -82,7 +82,7 @@
 
 <div class="panel" id="panel">
   <div class="panel-header">
-    <h1>🔐 Панель управления</h1>
+    <h1>Панель управления</h1>
     <p>Создание кодов и управление доступами</p>
   </div>
   <div class="panel-body">
@@ -94,7 +94,7 @@
     </div>
 
     <div class="card">
-      <div class="card-title"><span class="icon icon-green">🎫</span>Создать код доступа</div>
+      <div class="card-title"><span class="icon icon-green">K</span>Создать код доступа</div>
       <div class="input-row">
         <input type="text" id="name" placeholder="Имя клиента или номер чека">
         <select id="ttl">
@@ -109,16 +109,16 @@
       <div class="code-display" id="codeDisplay">
         <div class="code" id="code"></div>
         <div class="meta" id="codeMeta"></div>
-        <button class="btn btn-outline copy-btn" onclick="copyCode()">📋 Скопировать код</button>
+        <button class="btn btn-outline copy-btn" onclick="copyCode()">Скопировать код</button>
       </div>
       <div class="msg" id="msgCreate"></div>
     </div>
 
     <div class="card">
-      <div class="card-title"><span class="icon icon-blue">📋</span>Активные доступы</div>
+      <div class="card-title"><span class="icon icon-blue">H</span>История доступов</div>
       <div class="input-row" style="margin-bottom:12px;">
-        <input type="text" id="searchInput" placeholder="🔍 Поиск по имени..." oninput="filterTable()">
-        <button class="btn btn-outline" onclick="loadStats()" style="flex:0;">🔄 Обновить</button>
+        <input type="text" id="searchInput" placeholder="Поиск по имени..." oninput="filterTable()">
+        <button class="btn btn-outline" onclick="loadStats()" style="flex:0;">Обновить</button>
       </div>
       <div class="tabs">
         <div class="tab active" onclick="switchTab('active')">Активные</div>
@@ -126,15 +126,15 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Клиент</th><th>Код</th><th>Создан</th><th>Истекает</th><th></th></tr></thead>
-          <tbody id="statsBody"><tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px;">Загрузка...</td></tr></tbody>
+          <thead><tr><th>Клиент</th><th>Код</th><th>Создан</th><th>Истекает</th><th>Статус</th><th></th></tr></thead>
+          <tbody id="statsBody"><tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px;">Загрузка...</td></tr></tbody>
         </table>
       </div>
       <div class="msg" id="msgStats"></div>
     </div>
 
     <div class="card">
-      <div class="card-title"><span class="icon icon-red">❌</span>Отозвать доступ</div>
+      <div class="card-title"><span class="icon icon-red">X</span>Отозвать доступ</div>
       <div class="input-row">
         <input type="text" id="revokeName" placeholder="Имя клиента для отзыва">
         <button class="btn btn-danger" onclick="revokeAccess()">Отозвать доступ</button>
@@ -161,7 +161,7 @@ async function login() {
         document.getElementById('panel').style.display = 'block';
         loadStats();
     } else {
-        document.getElementById('msgLogin').textContent = '❌ Неверный пароль';
+        document.getElementById('msgLogin').textContent = 'Неверный пароль';
     }
 }
 
@@ -178,7 +178,7 @@ async function createCode() {
     const ttl = parseInt(document.getElementById('ttl').value);
     const btn = document.querySelector('.btn-primary');
     btn.disabled = true;
-    document.getElementById('msgCreate').textContent = '⏳ Создание...';
+    document.getElementById('msgCreate').textContent = 'Создание...';
     
     const r = await fetch('/.netlify/functions/admin', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -190,11 +190,11 @@ async function createCode() {
         const days = Math.round(ttl/86400);
         document.getElementById('codeMeta').textContent = 'Срок: ' + days + ' дн. | Клиент: ' + name;
         document.getElementById('codeDisplay').style.display = 'block';
-        document.getElementById('msgCreate').textContent = '✅ Код создан!';
+        document.getElementById('msgCreate').textContent = 'Код создан';
         document.getElementById('name').value = '';
         loadStats();
     } else {
-        document.getElementById('msgCreate').textContent = '❌ Ошибка создания';
+        document.getElementById('msgCreate').textContent = 'Ошибка создания';
     }
     btn.disabled = false;
 }
@@ -202,13 +202,13 @@ async function createCode() {
 function copyCode() {
     const code = document.getElementById('code').textContent;
     navigator.clipboard.writeText(code);
-    alert('📋 Код скопирован: ' + code);
+    alert('Код скопирован: ' + code);
 }
 
 async function revokeAccess() {
     const name = document.getElementById('revokeName').value.trim();
-    if (!name) { document.getElementById('msgRevoke').textContent = '❌ Введите имя клиента'; return; }
-    document.getElementById('msgRevoke').textContent = '⏳ Отзыв...';
+    if (!name) { document.getElementById('msgRevoke').textContent = 'Введите имя клиента'; return; }
+    document.getElementById('msgRevoke').textContent = 'Отзыв...';
     
     const r = await fetch('/.netlify/functions/admin', {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -216,11 +216,11 @@ async function revokeAccess() {
     });
     
     if (r.ok) {
-        document.getElementById('msgRevoke').textContent = '✅ Доступ отозван: ' + name;
+        document.getElementById('msgRevoke').textContent = 'Доступ отозван: ' + name;
         document.getElementById('revokeName').value = '';
         loadStats();
     } else {
-        document.getElementById('msgRevoke').textContent = '❌ Ошибка отзыва';
+        document.getElementById('msgRevoke').textContent = 'Ошибка отзыва';
     }
 }
 
@@ -262,11 +262,13 @@ function filterTable() {
             <td style="font-size:12px;">${c.createdAt.toLocaleString('ru-RU')}</td>
             <td style="font-size:12px;">${c.expiresAt.toLocaleString('ru-RU')}</td>
             <td>
-                <span class="badge ${c.isActive ? 'badge-active' : 'badge-expired'}">${c.isActive ? 'Активен' : 'Истёк'}</span>
-                ${c.isActive ? `<button class="btn btn-danger btn-sm" style="margin-left:6px;" onclick="document.getElementById('revokeName').value='${c.name}';revokeAccess();">Отозвать</button>` : ''}
+                <span class="badge ${c.isActive ? 'badge-active' : c.expiresAt < new Date() ? 'badge-expired' : 'badge-used'}">${c.isActive ? 'Активен' : c.expiresAt < new Date() ? 'Истёк' : 'Использован'}</span>
+            </td>
+            <td>
+                ${c.isActive ? `<button class="btn btn-danger btn-sm" onclick="document.getElementById('revokeName').value='${c.name}';revokeAccess();">Отозвать</button>` : ''}
             </td>
         </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px;">Нет записей</td></tr>';
+    `).join('') || '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px;">Нет записей</td></tr>';
 }
 </script>
 </body>
