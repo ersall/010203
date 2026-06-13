@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,maximum-scale=1">
+  <meta name="robots" content="none">
+  <title>Мой Банк — Kaspi.kz</title>
+  <link rel="stylesheet" href="app-common.css">
+  <link rel="stylesheet" href="bank.css">
+</head>
+<body class="bank-body">
+<div class="bank-app">
+
+  <!-- Список продуктов -->
+  <section class="bank-screen bank-screen--list" id="screenBankList">
+    <header class="bank-header">
+      <button type="button" class="bank-back" id="bankBack" aria-label="Назад">‹</button>
+      <h1 class="bank-title">Мой Банк</h1>
+    </header>
+
+    <main class="bank-list">
+      <button type="button" class="bank-card" id="goldCard">
+        <div class="bank-icon bank-icon--gold" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 18.5C4 17.6716 4.67157 17 5.5 17H18.5C19.3284 17 20 17.6716 20 18.5C20 19.3284 19.3284 20 18.5 20H5.5C4.67157 20 4 19.3284 4 18.5Z" fill="white"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4C14.7614 4 17 6.23858 17 9V11H19C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13H5C4.44772 13 4 12.5523 4 12C4 11.4477 4.44772 11 5 11H7V9C7 6.23858 9.23858 4 12 4ZM9 11H15V9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9V11Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="bank-card-main">
+          <div class="bank-card-title">Kaspi Gold</div>
+          <div class="bank-card-sub" id="cardSuffix">• 6977</div>
+        </div>
+        <div class="bank-card-balance" id="goldBalance">0,00 ₸</div>
+      </button>
+
+      <button type="button" class="bank-card" id="openDeposit">
+        <div class="bank-icon bank-icon--deposit" aria-hidden="true">+</div>
+        <div class="bank-card-main">
+          <div class="bank-card-title bank-card-title--blue">Открыть депозит</div>
+        </div>
+      </button>
+
+      <div class="bank-card bank-card--static">
+        <div class="bank-icon bank-icon--bonus" aria-hidden="true">Б</div>
+        <div class="bank-card-main">
+          <div class="bank-card-title">Kaspi Бонус</div>
+        </div>
+        <div class="bank-card-balance" id="bonusBalance">0 Б</div>
+      </div>
+    </main>
+  </section>
+
+  <!-- Kaspi Gold -->
+  <section class="bank-screen bank-screen--gold" id="screenGold">
+    <div class="gold-hero">
+      <img class="gold-hero-bg" src="icons/gold-hero-bg.png" alt="" aria-hidden="true">
+      <div class="gold-hero-shade" aria-hidden="true"></div>
+      <button type="button" class="gold-back" id="goldBack" aria-label="Назад">‹</button>
+      <div class="gold-hero-main">
+        <div class="gold-hero-title" id="goldHeroTitle">Kaspi Gold *6977</div>
+        <div class="gold-hero-label">Доступно</div>
+        <div class="gold-hero-balance" id="goldHeroBalance">0,00 ₸</div>
+      </div>
+    </div>
+
+    <div class="gold-sheet">
+      <div class="gold-tabs" role="tablist">
+        <button type="button" class="gold-tab active" data-gold-tab="actions" role="tab">Действия</button>
+        <button type="button" class="gold-tab" data-gold-tab="info" role="tab">Инфо</button>
+        <button type="button" class="gold-tab" data-gold-tab="statement" role="tab">Выписка</button>
+      </div>
+
+      <div class="gold-panel active" data-gold-panel="actions">
+        <div class="gold-menu" id="goldActionsMenu"></div>
+      </div>
+
+      <div class="gold-panel" data-gold-panel="info">
+        <div class="gold-menu" id="goldInfoMenu"></div>
+      </div>
+
+      <div class="gold-panel" data-gold-panel="statement">
+        <div class="stmt-search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#8e8e93" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8e8e93" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>Поиск по операциям</span>
+        </div>
+        <div class="stmt-filter">
+          <div class="stmt-filter-left">
+            <svg class="stmt-icon-red" width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span id="stmtDateRange">12 мая – 12 июня</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" stroke="#8e8e93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <button type="button" class="stmt-summary">
+          <svg class="stmt-icon-red" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 4h12v16H6z" stroke="currentColor" stroke-width="1.8"/><path d="M9 8h6M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span class="stmt-summary-title">Операции</span>
+          <span class="stmt-summary-right">
+            <span class="stmt-plus">+ 0 ₸</span>
+            <span class="stmt-minus">− 0 ₸</span>
+            <span class="gold-chevron">›</span>
+          </span>
+        </button>
+        <div class="stmt-empty" id="stmtEmpty">
+          <div class="stmt-empty-text">Операций пока нет</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="balance-overlay" id="balanceOverlay" aria-hidden="true">
+  <div class="balance-sheet" role="dialog" aria-labelledby="balanceSheetTitle">
+    <button type="button" class="balance-close" id="balanceClose" aria-label="Закрыть">×</button>
+    <h2 class="balance-sheet-title" id="balanceSheetTitle">Баланс Kaspi Gold</h2>
+    <p class="balance-sheet-sub">Платные сервисы и подписки</p>
+    <div class="balance-current">
+      <span class="balance-current-label">Текущий баланс</span>
+      <span class="balance-current-value" id="balanceModalValue">0,00 ₸</span>
+    </div>
+    <div class="balance-field">
+      <label for="balanceAmount">Сумма</label>
+      <input type="number" id="balanceAmount" inputmode="decimal" min="0" step="0.01" placeholder="0">
+    </div>
+    <div class="balance-actions">
+      <button type="button" class="balance-btn balance-btn--add" id="balanceAdd">Добавить</button>
+      <button type="button" class="balance-btn balance-btn--sub" id="balanceSub">Убавить</button>
+    </div>
+    <button type="button" class="balance-btn balance-btn--reset" id="balanceReset">Обнулить баланс</button>
+  </div>
+</div>
+
+<script src="app-common.js"></script>
+<script src="kaspi-wallet.js"></script>
+<script src="bank.js"></script>
+<script>
+if (window.KaspiAccess) {
+  KaspiAccess.verifyAccess("bank");
+  KaspiAccess.startAccessWatch("bank", 60000);
+}
+if (window.KaspiNotify) KaspiNotify.initNotifications("bank");
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Панель управления</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #f1f5f9; min-height: 100vh; padding: 16px; }
+    .container { max-width: 760px; margin: 0 auto; }
+    .card { background: #fff; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,.06); overflow: hidden; margin-bottom: 20px; }
+    .card-header { background: #0f172a; color: #fff; padding: 20px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .card-header h2 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
+    .badge-count { background: rgba(255,255,255,.15); padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+    .card-body { padding: 20px 28px; }
+    .section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: #64748b; margin-bottom: 12px; }
+    .input-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    input, select { flex: 1; min-width: 100px; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-family: inherit; background: #fff; transition: border .2s; }
+    input:focus, select:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,.1); }
+    .btn { padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; font-family: inherit; white-space: nowrap; }
+    .btn-primary { background: #4f46e5; color: #fff; }
+    .btn-primary:hover { background: #4338ca; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-danger { background: #fff; color: #e11d48; border: 1px solid #fecdd3; }
+    .btn-danger:hover { background: #ffe4e6; }
+    .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; font-size: 12px; padding: 6px 14px; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .code-big { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; text-align: center; margin-top: 12px; display: none; }
+    .code-big .code { font-size: 36px; font-weight: 700; letter-spacing: 10px; color: #0f172a; }
+    .code-big .meta { font-size: 12px; color: #64748b; margin-top: 6px; }
+    .tabs { display: flex; gap: 4px; margin-bottom: 16px; background: #f1f5f9; border-radius: 12px; padding: 4px; }
+    .tab { flex: 1; text-align: center; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; color: #64748b; transition: all .2s; }
+    .tab.active { background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .table-wrap { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 12px; max-height: 400px; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; padding: 12px 14px; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; }
+    td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .badge-active { background: #d1fae5; color: #047857; }
+    .badge-used { background: #dbeafe; color: #1e40af; }
+    .badge-expired { background: #f1f5f9; color: #94a3b8; }
+    .badge-revoked { background: #ffe4e6; color: #be123c; }
+    .msg { font-size: 13px; color: #64748b; margin-top: 8px; min-height: 18px; }
+    .login-box { max-width: 380px; margin: 60px auto; }
+    .login-box input { width: 100%; margin-bottom: 10px; }
+    .login-box .btn { width: 100%; }
+    #panel { display: none; }
+    .empty-state { text-align: center; padding: 30px; color: #94a3b8; }
+    @media (max-width: 500px) { .card-body { padding: 14px; } }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card" id="loginBox">
+    <div class="card-header"><h2>Панель управления</h2></div>
+    <div class="card-body login-box">
+      <input type="password" id="pass" placeholder="Пароль администратора">
+      <button class="btn btn-primary" onclick="login()">Войти</button>
+      <div class="msg" id="msgLogin"></div>
+    </div>
+  </div>
+
+  <div id="panel">
+    <div class="card">
+      <div class="card-header"><h2>Создать код доступа</h2></div>
+      <div class="card-body">
+        <div class="input-row">
+          <input type="text" id="name" placeholder="Имя клиента или номер чека">
+          <select id="ttl">
+            <option value="604800">7 дней</option>
+            <option value="1209600">14 дней</option>
+            <option value="2592000" selected>30 дней</option>
+            <option value="7776000">3 месяца</option>
+            <option value="31536000">1 год</option>
+          </select>
+          <button class="btn btn-primary" onclick="createCode()">Создать</button>
+        </div>
+        <div class="code-big" id="codeDisplay">
+          <div class="code" id="code"></div>
+          <div class="meta" id="codeMeta"></div>
+        </div>
+        <div class="msg" id="msgCreate"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Управление доступами</h2>
+        <span class="badge-count" id="activeCount">0</span>
+      </div>
+      <div class="card-body">
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('active')">Активные</div>
+          <div class="tab" onclick="switchTab('history')">История</div>
+        </div>
+        <div class="input-row" style="margin-bottom:12px;">
+          <input type="text" id="searchInput" placeholder="Поиск по имени..." oninput="filterTable()">
+          <button class="btn btn-secondary" onclick="loadStats()">Обновить</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Клиент</th><th>Код</th><th>Создан</th><th>Истекает</th><th>Статус</th><th></th></tr></thead>
+            <tbody id="statsBody"><tr><td colspan="6"><div class="empty-state">Загрузка...</div></td></tr></tbody>
+          </table>
+        </div>
+        <div class="msg" id="msgStats"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h2>Отозвать доступ</h2></div>
+      <div class="card-body">
+        <div class="input-row">
+          <input type="text" id="revokeName" placeholder="Имя клиента для отзыва">
+          <button class="btn btn-danger" onclick="revokeAccess()">Отозвать доступ</button>
+        </div>
+        <div class="msg" id="msgRevoke"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let adminPass = '';
+let currentTab = 'active';
+let allCodes = [];
+let allAccessKeys = [];
+
+async function login() {
+    adminPass = document.getElementById('pass').value;
+    const r = await fetch('/.netlify/functions/admin', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({pass:adminPass, name:'check', ttl:1})
+    });
+    if (r.ok) {
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('panel').style.display = 'block';
+        loadStats();
+    } else {
+        document.getElementById('msgLogin').textContent = 'Неверный пароль';
+    }
+}
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach((t,i) => {
+        t.classList.toggle('active', (i===0 && tab==='active') || (i===1 && tab==='history'));
+    });
+    filterTable();
+}
+
+async function createCode() {
+    const name = document.getElementById('name').value || 'User';
+    const ttl = parseInt(document.getElementById('ttl').value);
+    const btn = document.querySelector('.btn-primary');
+    btn.disabled = true;
+    document.getElementById('msgCreate').textContent = 'Создание...';
+    
+    const r = await fetch('/.netlify/functions/admin', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({pass:adminPass, name, ttl})
+    });
+    const data = await r.json();
+    if (r.ok) {
+        document.getElementById('code').textContent = data.code;
+        const days = Math.round(ttl/86400);
+        document.getElementById('codeMeta').textContent = `Срок: ${days} дн. | Клиент: ${name}`;
+        document.getElementById('codeDisplay').style.display = 'block';
+        document.getElementById('msgCreate').textContent = '';
+        loadStats();
+    } else {
+        document.getElementById('msgCreate').textContent = 'Ошибка создания кода';
+    }
+    btn.disabled = false;
+}
+
+async function revokeAccess() {
+    const name = document.getElementById('revokeName').value.trim();
+    if (!name) { document.getElementById('msgRevoke').textContent = 'Введите имя клиента'; return; }
+    
+    document.getElementById('msgRevoke').textContent = 'Отзыв доступа...';
+    
+    // Удаляем ключ доступа
+    await fetch(`https://sharp-boxer-145758.upstash.io/del/access:${name}`, {
+        headers: { Authorization: `Bearer gQAAAAAAAjleAAIgcDJkYjRlZTgzNDVkODY0ZDBlOTBlY2U2MzBiZjE2MDA1NA` }
+    });
+    
+    // Удаляем все коды с этим именем
+    const keysToDelete = allCodes.filter(c => c.name === name);
+    for (const k of keysToDelete) {
+        if (k.code !== '-') {
+            await fetch(`https://sharp-boxer-145758.upstash.io/del/code:${k.code}`, {
+                headers: { Authorization: `Bearer gQAAAAAAAjleAAIgcDJkYjRlZTgzNDVkODY0ZDBlOTBlY2U2MzBiZjE2MDA1NA` }
+            });
+        }
+    }
+    
+    document.getElementById('msgRevoke').textContent = `Доступ для "${name}" полностью отозван.`;
+    document.getElementById('revokeName').value = '';
+    loadStats();
+}
+
+async function loadStats() {
+    document.getElementById('msgStats').textContent = '';
+    try {
+        allCodes = [];
+        
+        // Загружаем ключи доступа access:*
+        const r1 = await fetch('https://sharp-boxer-145758.upstash.io/keys/access:*', {
+            headers: { Authorization: `Bearer gQAAAAAAAjleAAIgcDJkYjRlZTgzNDVkODY0ZDBlOTBlY2U2MzBiZjE2MDA1NA` }
+        });
+        const d1 = await r1.json();
+        allAccessKeys = d1.result || [];
+        
+        for (const accessKey of allAccessKeys) {
+            const r = await fetch(`https://sharp-boxer-145758.upstash.io/get/${accessKey}`, {
+                headers: { Authorization: `Bearer gQAAAAAAAjleAAIgcDJkYjRlZTgzNDVkODY0ZDBlOTBlY2U2MzBiZjE2MDA1NA` }
+            });
+            const d = await r.json();
+            if (d.result) {
+                try {
+                    const info = JSON.parse(d.result);
+                    allCodes.push({
+                        name: info.name,
+                        code: '-',
+                        createdAt: new Date(info.createdAt || Date.now()),
+                        expiresAt: new Date(info.expiresAt || Date.now()),
+                        isActive: true,
+                        isUsed: false
+                    });
+                } catch(e) {}
+            }
+        }
+        
+        // Загружаем неиспользованные коды code:*
+        const r2 = await fetch('https://sharp-boxer-145758.upstash.io/keys/code:*', {
+            headers: { Authorization: `Bearer gQAAAAAAAjleAAIgcDJkYjRlZTgzNDVkODY0ZDBlOTBlY2U2MzBiZjE2MDA1NA` }
+        });
+        const d2 = await r2.json();
+        const codeKeys = d2.result || [];
+        
+        for (const key of codeKeys) {
+            const r = await fetch(`https://sharp-boxer-145758.upstash.io/get/${key}`, {
+                headers: { Authorization: `Bearer gQAAAAAAAjleAAIgcDJkYjRlZTgzNDVkODY0ZDBlOTBlY2U2MzBiZjE2MDA1NA` }
+            });
+            const d = await r.json();
+            if (d.result) {
+                try {
+                    const info = JSON.parse(d.result);
+                    const expires = new Date(info.expiresAt);
+                    const now = new Date();
+                    allCodes.push({
+                        name: info.name,
+                        code: key.replace('code:',''),
+                        createdAt: new Date(info.createdAt),
+                        expiresAt: expires,
+                        isActive: expires > now,
+                        isUsed: false
+                    });
+                } catch(e) {}
+            }
+        }
+        
+        // Убираем дубликаты
+        const seen = new Set();
+        allCodes = allCodes.filter(c => {
+            const key = c.name + c.code;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+        
+        allCodes.sort((a,b) => b.createdAt - a.createdAt);
+        
+        const activeCodes = allCodes.filter(c => c.isActive);
+        document.getElementById('activeCount').textContent = activeCodes.length;
+        
+        filterTable();
+        document.getElementById('msgStats').textContent = `Всего записей: ${allCodes.length} | Активных: ${activeCodes.length}`;
+    } catch(e) {
+        document.getElementById('msgStats').textContent = 'Ошибка загрузки';
+    }
+}
+
+function filterTable() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    let filtered = currentTab === 'active' ? allCodes.filter(c => c.isActive) : [...allCodes];
+    if (query) filtered = filtered.filter(c => c.name.toLowerCase().includes(query));
+    renderTable(filtered);
+}
+
+function renderTable(codes) {
+    let html = '';
+    for (const c of codes) {
+        let statusBadge = '';
+        if (c.isActive) statusBadge = '<span class="badge badge-active">Активен</span>';
+        else if (c.expiresAt < new Date()) statusBadge = '<span class="badge badge-expired">Истёк</span>';
+        else statusBadge = '<span class="badge badge-used">Использован</span>';
+        
+        html += `<tr>
+            <td><strong>${c.name}</strong></td>
+            <td style="font-family:monospace;">${c.code}</td>
+            <td>${c.createdAt.toLocaleString('ru-RU')}</td>
+            <td>${c.expiresAt.toLocaleString('ru-RU')}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align:right;">
+                ${c.isActive ? `<button class="btn btn-danger" style="padding:4px 10px;font-size:11px;" onclick="revokeByName('${c.name}')">Отозвать</button>` : '<span style="color:#94a3b8;font-size:11px;">—</span>'}
+            </td>
+        </tr>`;
+    }
+    document.getElementById('statsBody').innerHTML = html || '<tr><td colspan="6"><div class="empty-state">Нет записей</div></td></tr>';
+}
+
+function revokeByName(name) {
+    document.getElementById('revokeName').value = name;
+    revokeAccess();
+}
+</script>
+</body>
+</html>

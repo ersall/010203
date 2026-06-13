@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,maximum-scale=1">
+  <meta name="robots" content="none">
+  <title>Платежи — Kaspi.kz</title>
+  <link rel="stylesheet" href="app-common.css">
+  <link rel="stylesheet" href="payments.css">
+</head>
+<body class="pay-body">
+<div class="pay-app">
+
+  <!-- Главный экран платежей -->
+  <div class="pay-screen active" id="screenMain">
+    <header class="pay-header">
+      <button type="button" class="pay-back" onclick="location.href='/'">‹</button>
+      <h1 class="pay-title">Платежи</h1>
+      <button type="button" class="pay-loc" id="openCityBtn" aria-label="Выбрать город">
+        <img src="homeq.svg" class="red-filter" alt="">
+      </button>
+    </header>
+
+    <div class="pay-tabs">
+      <button type="button" class="pay-tab" data-tab="all">Все</button>
+      <button type="button" class="pay-tab active" data-tab="mine">Мои платежи</button>
+      <button type="button" class="pay-tab" data-tab="history">История</button>
+    </div>
+
+    <div data-panel="all" style="display:none">
+      <div class="pay-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Что хотите оплатить?">
+      </div>
+      <div class="pay-skeleton"></div>
+      <div class="pay-skeleton"></div>
+      <div class="pay-skeleton"></div>
+    </div>
+
+    <div data-panel="mine">
+      <div class="pay-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Что хотите оплатить?">
+      </div>
+      <div class="pay-section-title">ЧАСТЫЕ</div>
+      <div class="pay-item" id="avtobusTile">
+        <div class="pay-item-icon"><img src="avtobus-logo.png" alt="Avtobus"></div>
+        <div class="pay-item-main">
+          <div class="pay-item-title">Avtobus. Оплата проезда по Kaspi QR</div>
+        </div>
+        <div class="pay-item-dots">⋮</div>
+      </div>
+    </div>
+
+    <div data-panel="history" style="display:none">
+      <div class="pay-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Услуга, сумма">
+      </div>
+      <div class="pay-filter">
+        <span>Настроить фильтр</span>
+        <span style="color:var(--pay-red)">▾</span>
+      </div>
+      <div id="historyList"></div>
+    </div>
+  </div>
+
+  <!-- Ввод кода транспорта -->
+  <div class="pay-screen" id="screenInput">
+    <header class="pay-header">
+      <button type="button" class="pay-back" id="backFromInput">‹</button>
+      <h1 class="pay-title">Avtobus. Оплата проезда по Kaspi QR</h1>
+    </header>
+    <div class="pay-input-row">
+      <span>Код транспорта</span>
+      <input id="vehicleInput" type="text" inputmode="numeric" placeholder="1233">
+      <span style="margin-left:8px">▣</span>
+    </div>
+    <div class="pay-muted-center">Комиссия 0 ₸</div>
+    <button type="button" class="pay-btn pay-btn-blue" id="continueBtn">ПРОДОЛЖИТЬ</button>
+  </div>
+
+  <!-- Подтверждение -->
+  <div class="pay-screen" id="screenConfirm">
+    <header class="pay-header">
+      <button type="button" class="pay-back" id="backFromConfirm">‹</button>
+      <h1 class="pay-title">Информация</h1>
+    </header>
+    <div class="pay-info-block">
+      <div class="pay-info-label">Код транспорта</div>
+      <div style="font-size:18px;font-weight:600" id="confirmVehicle">1233</div>
+    </div>
+    <div class="pay-sum-bar">
+      <span>К оплате</span>
+      <span data-price-slot>100,00 ₸</span>
+    </div>
+    <div class="pay-card-row">
+      <img src="0012.jpg" alt="">
+      <span>Kaspi Gold</span>
+      <b id="cashBalance">39 140 ₸</b>
+    </div>
+    <div class="pay-muted-center">Комиссия 0 ₸</div>
+    <button type="button" class="pay-btn pay-btn-blue" id="confirmPayBtn" data-price-btn>К оплате 100 ₸</button>
+  </div>
+
+  <!-- Успех -->
+  <div class="pay-screen" id="screenResult">
+    <header class="pay-header">
+      <button type="button" class="pay-back" id="backFromResult">‹</button>
+      <h1 class="pay-title">Avtobus. Оплата проезда по Kaspi QR</h1>
+    </header>
+    <div class="pay-success">
+      <h2>Ваш платеж принят.</h2>
+      <p class="sum" id="successSum">100 ₸</p>
+    </div>
+    <div class="pay-link-row" id="toHistoryLink">
+      <div>
+        <div class="title">История платежей</div>
+        <div class="sub">Квитанция за оплату</div>
+      </div>
+      <span>›</span>
+    </div>
+    <div class="pay-promo">
+      <div class="pay-promo-title">ВАС МОЖЕТ ЗАИНТЕРЕСОВАТЬ</div>
+      <div class="pay-promo-grid">
+        <div class="pay-promo-card"></div>
+        <div class="pay-promo-card"></div>
+        <div class="pay-promo-card"></div>
+      </div>
+    </div>
+    <button type="button" class="pay-btn pay-btn-blue" id="backToPaymentsBtn">ВЕРНУТЬСЯ В ПЛАТЕЖИ</button>
+  </div>
+
+  <nav class="pay-nav">
+    <a href="/"><img src="homeq.svg" class="red-filter" alt="">Главная</a>
+    <a href="#" data-kaspi-qr><img src="scan-qr-500.svg" class="gray-filter" alt="">Kaspi QR</a>
+    <a href='/messages'><img src="chat-500.svg" class="gray-filter" alt="">Сообщения</a>
+    <a href='/serv'><img src="serv.svg" class="gray-filter" alt="">Сервисы</a>
+  </nav>
+</div>
+
+<!-- Выбор города -->
+<div class="pay-overlay" id="cityModal">
+  <div class="pay-modal">
+    <div class="pay-modal-body" style="font-weight:700;padding-bottom:0">Выберите город</div>
+    <div class="pay-city-list" id="cityList"></div>
+    <div class="pay-modal-actions">
+      <button type="button" id="closeCityModal">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Камера -->
+<div class="pay-overlay" id="cameraModal">
+  <div class="pay-modal">
+    <div class="pay-modal-body">Нет доступа к камере.<br><br>Перейдите в настройки телефона и измените параметры приложения.</div>
+    <div class="pay-modal-actions">
+      <button type="button" id="closeCameraModal">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Чек -->
+<div class="pay-receipt-wrap" id="receiptModal">
+  <button type="button" class="pay-close-top" id="closeReceipt">×</button>
+  <div class="pay-receipt">
+    <div class="pay-receipt-head">
+      <img src="avtobus-logo.png" alt="">
+      <div>
+        <h3 id="receiptTitle">Общественный транспорт</h3>
+        <p id="receiptService">Avtobus. Оплата проезда по Kaspi QR</p>
+        <p id="receiptCode" style="font-weight:600;color:#111">1233</p>
+      </div>
+    </div>
+    <div class="pay-receipt-green">
+      <div>Платеж успешно совершен</div>
+      <div class="sum" id="receiptSum">100,00 ₸</div>
+    </div>
+    <div class="pay-receipt-lines">
+      <div class="pay-receipt-line"><span>№ квитанции</span><span id="receiptNo"></span></div>
+      <div class="pay-receipt-line"><span>Комиссия</span><span id="receiptCommission">0 ₸</span></div>
+      <div class="pay-receipt-line"><span>Код транспорта</span><span id="receiptTransport"></span></div>
+      <div class="pay-receipt-line"><span>Дата платежа</span><span id="receiptDate"></span></div>
+      <div class="pay-receipt-line"><span>ФИО плательщика</span><span id="receiptName"></span></div>
+      <div class="pay-receipt-line"><span>Оплачено с</span><span id="receiptFrom">Kaspi Gold</span></div>
+    </div>
+    <div class="pay-receipt-actions">
+      <button type="button">↻ Повторить платеж</button>
+      <button type="button">⊘ Отменить платеж</button>
+    </div>
+  </div>
+</div>
+
+<script src="app-common.js"></script>
+<script src="payments.js"></script>
+<script>
+</script>
+</body>
+</html>

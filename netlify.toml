@@ -1,0 +1,40 @@
+# ЗАЩИТА ИСХОДНИКОВ
+[[redirects]]
+  from = "/netlify/functions/*"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/package.json"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/.env"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/netlify.toml"
+  to = "/404.html"
+  status = 404
+
+# СКРЫТИЕ АДМИНКИ
+[[redirects]]
+  from = "/admin"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/admin.html"
+  to = "/404.html"
+  status = 404
+
+# ЗАГОЛОВКИ БЕЗОПАСНОСТИ
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "no-referrer"

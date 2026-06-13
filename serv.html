@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Kaspi.kz — Сервисы</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,maximum-scale=1,shrink-to-fit=no">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="none">
+  <link rel="icon" href="/main/kaspi.kz_files/favicon.ico">
+  <link rel="stylesheet" href="app-common.css">
+  <style>
+    :root {
+      --text-main: #212121;
+      --text-secondary: #8a8a8e;
+      --kaspi-red: #f14635;
+      --border-light: #e5e5e5;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      font-family: -apple-system, system-ui, Helvetica, sans-serif;
+      background: #fff;
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+    .red-filter {
+      filter: invert(38%) sepia(58%) saturate(4642%) hue-rotate(346deg) brightness(96%) contrast(92%);
+    }
+    .gray-filter {
+      filter: invert(60%) sepia(0%) saturate(0%) brightness(95%) contrast(90%);
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      text-align: center;
+    }
+    .service-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    .service-link:active { opacity: 0.85; }
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      height: 75px;
+      background: #fff;
+      border-top: 1px solid var(--border-light);
+      display: flex;
+      z-index: 10;
+    }
+    .nav-item {
+      flex: 1;
+      font-size: 10px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-item.active { color: var(--kaspi-red); }
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 4px;
+      position: relative;
+    }
+    .nav-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--kaspi-red);
+      color: #fff;
+      font-size: 10px;
+      min-width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="services-page">
+  <header class="serv-header">
+    <h1>Сервисы</h1>
+    <div class="lang-switch">
+      <span>Қаз</span>
+      <span class="active">Рус</span>
+    </div>
+  </header>
+
+  <div class="profile-row" id="profileRow">
+    <div class="profile-avatar">
+      <img id="profileAvatarImg" src="avatar.jpg" alt="">
+    </div>
+    <div class="profile-info">
+      <p class="profile-name" id="profileName">Абильмажин А.</p>
+      <p class="profile-sub">Настройки</p>
+    </div>
+  </div>
+
+  <div class="services-grid services-grid--large">
+    <div class="service-link" id="shopLink">
+      <div class="service-icon"><img src="cart-500.svg" class="red-filter" alt=""></div>
+      <span>Магазин</span>
+    </div>
+    <div class="service-link" onclick="openSubPage('bank.html')">
+  <div class="service-icon"><img src="my-bank-logo-500.svg" class="red-filter" alt=""></div>
+  <span>Мой Банк</span>
+</div>
+    <div class="service-link" data-open-payments style="cursor:pointer;">
+      <div class="service-icon"><img src="payments-logo-500.svg" class="red-filter" alt=""></div>
+      <span>Платежи</span>
+    </div>
+    <div class="service-link">
+      <div class="service-icon"><img src="transfers-logo-500.svg" class="red-filter" alt=""></div>
+      <span>Переводы</span>
+    </div>
+    <div class="service-link">
+      <div class="service-icon"><img src="0012.jpg" alt="" style="border-radius:8px"></div>
+      <span>Акции</span>
+    </div>
+    <div class="service-link">
+      <div class="service-icon"><img src="suitcase_logo.svg" class="red-filter" alt=""></div>
+      <span>Travel</span>
+    </div>
+    <div class="service-link gos" id="gosuLink">
+      <div class="service-icon"><img src="gos.png" class="red-filter" alt=""></div>
+      <span>Госуслуги</span>
+    </div>
+    <div class="service-link ads" id="secureToggleBtn">
+      <div class="service-icon"><span class="ads-icon-bg red-filter-icon" aria-hidden="true"></span></div>
+      <span>Объявления</span>
+    </div>
+    <div class="service-link">
+      <div class="service-icon"><img src="homeq.svg" class="red-filter" alt=""></div>
+      <span>Гид</span>
+    </div>
+    <div class="service-link">
+      <div class="service-icon"><img src="scan-qr-500.svg" class="red-filter" alt=""></div>
+      <span>Kaspi Maps</span>
+    </div>
+  </div>
+
+  <h2 class="partners-title">Партнерские сервисы</h2>
+
+  <div class="partner-card">
+    <div class="partner-info">
+      <img src="magnum.jpg" alt="Magnum" style="border-radius:10px">
+      <div>
+        <b>Magnum</b>
+        <p>Доставка продуктов</p>
+      </div>
+    </div>
+    <img class="partner-arrow" src="main/kaspi.kz_files/arrow.png" alt="">
+  </div>
+
+  <div class="partner-card">
+    <div class="partner-info">
+      <img src="0012.jpg" alt="CHOCOFOOD" style="border-radius:10px">
+      <div>
+        <b>CHOCOFOOD</b>
+        <p>Сервис доставки еды</p>
+      </div>
+    </div>
+    <img class="partner-arrow" src="main/kaspi.kz_files/arrow.png" alt="">
+  </div>
+
+  <nav class="nav-bar">
+    <a class="nav-item" data-tab="home" href="/">
+      <div class="nav-icon"><img src="homeq.svg" class="gray-filter" alt=""></div>
+      Главная
+    </a>
+    <a class="nav-item" data-kaspi-qr href="#">
+      <div class="nav-icon"><img src="scan-qr-500.svg" class="gray-filter" alt=""></div>
+      Kaspi QR
+    </a>
+    <a class='nav-item' data-open-messages href='/messages'>
+      <div class="nav-icon">
+        <img src="chat-500.svg" class="gray-filter" alt="">
+        <div class="badge">1</div>
+      </div>
+      Сообщения
+    </a>
+    <a class='nav-item active' data-tab='services' href='/serv'>
+      <div class="nav-icon"><img src="serv.svg" class="red-filter" alt=""></div>
+      Сервисы
+    </a>
+  </nav>
+</div>
+
+<div class="settings-overlay" id="settingsOverlay">
+  <div class="settings-sheet">
+    <h2>Настройки профиля</h2>
+    <div class="settings-field">
+      <label>Фото профиля</label>
+      <div class="avatar-upload">
+        <div class="avatar-preview">
+          <img id="settingsAvatarPreview" src="avatar.jpg" alt="">
+        </div>
+        <input type="file" id="avatarFileInput" accept="image/*" hidden>
+        <button type="button" class="avatar-upload-btn" id="avatarUploadBtn">Выбрать фото</button>
+      </div>
+    </div>
+    <div class="settings-field">
+      <label>ФИО (как на экране PIN)</label>
+      <input type="text" id="settingsName" maxlength="32" placeholder="Иванов И.">
+    </div>
+    <div class="settings-actions">
+      <button type="button" class="btn-cancel" id="settingsCancel">Отмена</button>
+      <button type="button" class="btn-save" id="settingsSave">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script src="app-common.js"></script>
+<script src="payments.js"></script>
+<script>
+
+function openSubPage(url) {
+  sessionStorage.setItem('kaspi_tab_nav', '1');
+  location.href = url;
+}
+
+document.getElementById('shopLink').addEventListener('click', function () { openSubPage('magaz.html'); });
+document.getElementById('gosuLink').addEventListener('click', function () { openSubPage('gosu.html'); });
+
+KaspiProfile.applyProfileRow();
+KaspiProfile.initSettingsUI();
+KaspiProfile.initNav('services');
+KaspiProfile.initPageEnter();
+</script>
+<script src="anti-capture.js"></script>
+</body>
+</html>

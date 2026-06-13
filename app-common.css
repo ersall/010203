@@ -1,0 +1,313 @@
+/* Общие стили: вкладка Сервисы, профиль, настройки */
+
+html, body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+.page-transition-out {
+  animation: pageOut 0.28s ease forwards;
+}
+@keyframes pageOut {
+  to { opacity: 0; transform: translateX(-18px); }
+}
+
+.page-transition-in .app-wrapper,
+.page-transition-in .services-page {
+  animation: pageIn 0.32s ease;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateX(18px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Крупные иконки */
+.services-grid--large {
+  gap: 22px 6px;
+  padding: 14px 10px 20px;
+}
+.services-grid--large .service-link {
+  font-size: 13px;
+  line-height: 1.15;
+}
+.services-grid--large .service-icon {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 8px;
+}
+.services-grid--large .service-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.services-grid--large .service-icon .ads-icon-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.services-grid--large .service-link.gos .service-icon,
+.services-grid--large .service-link.ads .service-icon {
+  width: 60px;
+  height: 58px;
+}
+
+/* Главная — чуть крупнее стандартной сетки */
+.services-grid--home .service-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 7px;
+}
+.services-grid--home .service-icon img {
+  width: 100%;
+  height: 100%;
+}
+.services-grid--home .service-icon .ads-icon-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.services-grid--home .service-link.gos .service-icon,
+.services-grid--home .service-link.ads .service-icon {
+  width: 58px;
+  height: 54px;
+}
+
+/* Страница сервисов */
+.services-page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding-bottom: 90px;
+  min-height: 100vh;
+  background: #fff;
+}
+
+.serv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 8px;
+}
+.serv-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+.lang-switch {
+  display: flex;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--text-secondary, #8a8a8e);
+}
+.lang-switch span.active {
+  color: var(--kaspi-red, #f14635);
+  font-weight: 600;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 16px 18px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.profile-row:active { opacity: 0.85; }
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  flex-shrink: 0;
+  background: #f0f0f0;
+}
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-info { flex: 1; min-width: 0; }
+.profile-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profile-sub {
+  font-size: 14px;
+  color: var(--text-secondary, #8a8a8e);
+  margin: 0;
+}
+
+.partners-title {
+  padding: 8px 16px 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main, #212121);
+}
+.partner-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border-light, #e5e5e5);
+  cursor: pointer;
+}
+.partner-card:active { background: #fafafa; }
+.partner-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.partner-info img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.partner-info b {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.partner-info p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary, #8a8a8e);
+}
+.partner-arrow {
+  width: 20px;
+  height: 20px;
+  opacity: 0.35;
+  flex-shrink: 0;
+}
+
+/* Настройки */
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 10000;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.settings-overlay.active { display: flex; }
+.settings-sheet {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 20px 16px 28px;
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.settings-overlay.active .settings-sheet {
+  transform: translateY(0);
+}
+.settings-sheet h2 {
+  margin: 0 0 18px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+.settings-field { margin-bottom: 16px; }
+.settings-field label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary, #8a8a8e);
+  margin-bottom: 6px;
+}
+.settings-field input[type="text"] {
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+}
+.settings-field input:focus {
+  border-color: var(--kaspi-red, #f14635);
+}
+.avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.avatar-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #eee;
+}
+.avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+.avatar-upload-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  background: #fafafa;
+  font-size: 14px;
+  color: var(--kaspi-red, #f14635);
+  cursor: pointer;
+  text-align: center;
+}
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.settings-actions button {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-save { background: var(--kaspi-red, #f14635); color: #fff; }
+.btn-cancel { background: #f0f0f0; color: #333; }
+
+.nav-item { cursor: pointer; text-decoration: none; color: inherit; }
+
+/* Иконка «Объявления» без <img> — iOS не показывает лупу/превью */
+#secureToggleBtn .ads-icon-bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: url(sss.svg) center / contain no-repeat;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#secureToggleBtn .service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#secureToggleBtn .red-filter-icon {
+  filter: invert(38%) sepia(58%) saturate(4642%) hue-rotate(346deg) brightness(96%) contrast(92%);
+}
+#secureToggleBtn {
+  -webkit-touch-callout: none;
+  user-select: none;
+  touch-action: none;
+}
+#secureToggleBtn.holding {
+  transform: scale(0.92);
+  opacity: 0.75;
+  transition: transform 0.15s ease;
+}

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Госуслуги</title>
+
+<style>
+:root {
+  --primary-red: #f14635;
+  --bg-gray: #f2f2f7;
+  --text-main: #000000;
+  --text-gray: #8e8e93;
+  --text-light-gray: #c7c7cc;
+  --white: #ffffff;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body { background:#fff; }
+
+/* FIX iOS PWA */
+body::before{
+  content:"";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);   
+  background: #ffffff;
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
+body {
+  margin: 0; padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--white);
+  color: var(--text-main);
+  padding-bottom: 75px;
+}
+
+/* --- HEADER --- */
+.header-top {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title {
+  font-size: 17px;
+  font-weight: 600;
+  flex-grow: 1;
+  text-align: center;
+  margin-right: 24px;
+}
+
+.header-back{
+  width: 24px;
+  height: 24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.header-back img{
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display:block;
+}
+
+/* --- TABS --- */
+.tabs-container {
+  padding: 0 16px 10px;
+  display: flex;
+}
+
+.tabs-bg {
+  background: #eeeff4;
+  border-radius: 9px;
+  padding: 2px;
+  display: flex;
+  width: 100%;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 7px;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.tab.active {
+  background: var(--white);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* --- SEARCH --- */
+.search-container {
+  padding: 0 16px 16px;
+}
+
+.search-box {
+  background: #eeeff4;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  color: var(--text-gray);
+}
+
+.search-box svg {
+  margin-right: 8px;
+  opacity: 0.5;
+}
+
+.search-text { font-size: 16px; }
+
+/* =========================
+   КАРУСЕЛЬ ДОКУМЕНТОВ
+   ========================= */
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  padding: 0 16px 12px;
+  gap: 12px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.horizontal-scroll::-webkit-scrollbar { display: none; }
+
+.card-doc {
+  min-width: 120px;
+  height: 94px;
+  border-radius: 12px;
+  padding: 11px 11px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.card-id { background: #e8f5e9; }
+.card-passport { background: #e0f7fa; }
+.card-student { background: #e3f2fd; }
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 7px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.card-title {
+  font-size: 12.5px;
+  line-height: 1.1;
+  font-weight: 500;
+  color: #333;
+  letter-spacing: -0.1px;
+}
+
+@media (max-width: 360px){
+  .card-doc{ min-width: 114px; height: 90px; padding: 10px 10px 9px; }
+  .card-icon{ width: 40px; height: 40px; margin-bottom: 7px; }
+  .card-title{ font-size: 12px; }
+}
+
+/* --- ССЫЛКА "ВСЕ ДОКУМЕНТЫ" --- */
+.all-docs-link {
+  padding: 0 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #3875bf;
+  font-size: 15px;
+  text-decoration: none;
+  font-weight: 400;
+}
+.all-docs-link span { color: #3875bf; }
+.all-docs-link svg { width: 16px; height: 16px; color: #3875bf; }
+
+/* --- VERTICAL LIST --- */
+.bg-divider { height: 12px; background-color: var(--bg-gray); }
+
+.service-list { padding-left: 16px; }
+
+.service-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px 14px 0;
+  border-bottom: 0.5px solid #e5e5e5;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.service-item:last-child { border-bottom: none; }
+
+.service-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.service-list .service-icon{
+  filter: invert(36%) sepia(79%) saturate(4345%) hue-rotate(349deg) brightness(97%) contrast(93%);
+}
+
+.service-content { flex: 1; }
+
+.service-title {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 2px;
+  color: #000;
+}
+
+.service-subtitle { font-size: 12px; color: var(--text-gray); }
+
+.arrow-right { width: 14px; height: 14px; color: #c7c7cc; }
+
+/* --- BOTTOM NAV --- */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 75px;
+  background: #fff;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  z-index: 10;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+  flex: 1;
+  font-size: 10px;
+  color: #8a8a8e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+.nav-item.active { color: var(--primary-red); }
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  position: relative;
+}
+.nav-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--primary-red);
+  color: #fff;
+  font-size: 10px;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+}
+
+.red-filter {
+  filter: invert(38%) sepia(58%) saturate(4642%) hue-rotate(346deg) brightness(96%) contrast(92%);
+}
+.gray-filter {
+  filter: invert(60%) sepia(0%) saturate(0%) brightness(95%) contrast(90%);
+}
+
+/* --- ЭКРАН ЗАГРУЗКИ (твой переход на 1112.html) --- */
+#loading-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 9999; display: none;
+}
+#progress-screen {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #ffffff; display: flex; flex-direction: column;
+}
+#progress-bar-container { width: 100%; height: 3px; background-color: #f0f0f0; }
+#progress-bar { width: 0%; height: 100%; background-color: #f14635; transition: width 1.5s linear; }
+#photo-screen {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  display: none; justify-content: center; align-items: center; background-color: white;
+}
+#loading-photo { width: 100%; height: 100%; object-fit: contain; }
+
+/* =========================
+   SKELETON LOADER (shimmer)
+   ========================= */
+.skeleton-screen{
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 9998;
+  overflow: hidden;
+  padding-bottom: 75px;
+  opacity: 1;
+  transition: opacity .22s ease;
+}
+
+.skeleton-screen.is-hidden{
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sk{
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ECECF1;
+}
+
+.sk::after{
+  content:"";
+  position:absolute;
+  top:0; left:-55%;
+  height:100%;
+  width:55%;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  animation: sk-shimmer 1.2s ease-in-out infinite;
+  transform: skewX(-15deg);
+}
+
+@keyframes sk-shimmer{
+  0%   { left:-55%; }
+  100% { left:110%; }
+}
+
+.sk-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 12px 16px;
+}
+
+.sk-header .sk-icon{
+  width:24px; height:24px;
+  border-radius: 8px;
+}
+.sk-header .sk-title{
+  width: 130px;
+  height: 16px;
+  border-radius: 8px;
+}
+
+.sk-pad{ padding: 0 16px 16px; }
+
+.sk-tabs{
+  height: 34px;
+  border-radius: 10px;
+  background:#EDEDF3;
+}
+.sk-search{
+  height: 38px;
+  border-radius: 10px;
+  background:#EDEDF3;
+}
+
+.sk-hscroll{
+  display:flex;
+  gap:12px;
+  padding: 0 16px 12px;
+}
+
+.sk-card{
+  width: 120px;
+  height: 94px;
+  border-radius: 12px;
+}
+
+.sk-link{
+  height: 16px;
+  width: 130px;
+  border-radius: 8px;
+}
+
+.sk-divider{
+  height: 12px;
+  background: #F2F2F7;
+}
+
+.sk-list{ padding-left: 16px; }
+
+.sk-item{
+  display:flex;
+  align-items:center;
+  padding: 14px 16px 14px 0;
+  border-bottom: 0.5px solid #e5e5e5;
+  gap: 16px;
+}
+
+.sk-li-icon{
+  width:24px; height:24px;
+  border-radius: 8px;
+  flex: 0 0 auto;
+}
+
+.sk-li-text{ flex:1; }
+
+.sk-li-title{
+  height: 14px;
+  width: 62%;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.sk-li-sub{
+  height: 10px;
+  width: 78%;
+  border-radius: 8px;
+  opacity: .9;
+}
+
+.sk-li-arrow{
+  width:14px; height:14px;
+  border-radius: 6px;
+  flex: 0 0 auto;
+  opacity: .7;
+}
+
+.sk-bottom-gap{ height: 75px; }
+
+@media (prefers-reduced-motion: reduce){
+  .sk::after{ animation: none; display:none; }
+}
+
+        .gos-docs-section { background: white; padding: 0 0 15px 0; border-bottom: 8px solid #f2f2f5; }
+        .gos-docs-scroll { display: flex; overflow-x: auto; padding: 0 15px; gap: 10px; margin-bottom: 15px; scrollbar-width: none; }
+        .gos-docs-scroll::-webkit-scrollbar { display: none; }
+        .gos-doc-card { background: #f5f5f5; border-radius: 16px; padding: 15px; min-width: 135px; display: flex; flex-direction: column; gap: 12px; }
+        .gos-doc-img { width: 66px; height: auto; object-fit: contain; }
+        .gos-doc-title { font-size: 13px; font-weight: 500; color: #333; line-height: 1.3; }
+
+        .gos-cats-section { background: white; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+        .gos-cats-scroll { display: flex; justify-content: space-between; padding: 0 15px; }
+        .gos-cat-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 70px; position: relative; }
+        .gos-cat-icon-bg { width: 58px; height: 58px; background: #f5f5f5; border-radius: 16px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .gos-cat-icon { width: 100%; height: 100%; object-fit: cover; }
+        .gos-cat-title { font-size: 12px; color: #555; text-align: center; }
+        .gos-cat-item.active .gos-cat-title { color: #ff2d17; font-weight: 600; }
+        .gos-cat-item.active::after { content: ''; position: absolute; bottom: -15px; left: 10px; right: 10px; height: 2px; background: #ff2d17; }
+
+        .gos-list-section { background: white; padding: 0 15px; }
+        .gos-list-title { font-size: 16px; font-weight: 700; padding: 20px 0 10px 0; }
+        .gos-list-item { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid #f5f5f5; gap: 15px; cursor: pointer; }
+        .gos-list-icon-wrapper { width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; overflow: hidden; }
+        .gos-list-icon { width: 100%; height: 100%; object-fit: cover; }
+        .gos-list-text { flex: 1; }
+        .gos-list-item-title { font-size: 15px; font-weight: 500; color: #222; line-height: 1.2; }
+        .gos-list-item-sub { font-size: 12px; color: #8e8e93; margin-top: 2px; }
+        .gos-badge { background: #ff2d17; color: white; font-size: 10px; font-weight: 700; padding: 3px 6px; border-radius: 6px; margin-right: 5px; }
+        .gos-arrow { color: #c7c7cc; font-size: 20px; }
+</style>
+</head>
+
+<body>
+
+<!-- SKELETON SCREEN -->
+<div id="skeleton" class="skeleton-screen" aria-hidden="true">
+  <div class="sk-row sk-header">
+    <div class="sk sk-icon"></div>
+    <div class="sk sk-title"></div>
+    <div class="sk sk-icon" style="opacity:0"></div>
+  </div>
+
+  <div class="sk-pad">
+    <div class="sk sk-tabs"></div>
+  </div>
+
+  <div class="sk-pad">
+    <div class="sk sk-search"></div>
+  </div>
+
+  <div class="sk-hscroll">
+    <div class="sk sk-card"></div>
+    <div class="sk sk-card"></div>
+    <div class="sk sk-card"></div>
+  </div>
+
+  <div class="sk-pad">
+    <div class="sk sk-link"></div>
+  </div>
+
+  <div class="sk-divider"></div>
+
+  <div class="sk-list">
+    <div class="sk-item">
+      <div class="sk sk-li-icon"></div>
+      <div class="sk-li-text">
+        <div class="sk sk-li-title"></div>
+        <div class="sk sk-li-sub"></div>
+      </div>
+      <div class="sk sk-li-arrow"></div>
+    </div>
+
+    <div class="sk-item">
+      <div class="sk sk-li-icon"></div>
+      <div class="sk-li-text">
+        <div class="sk sk-li-title"></div>
+        <div class="sk sk-li-sub"></div>
+      </div>
+      <div class="sk sk-li-arrow"></div>
+    </div>
+
+    <div class="sk-item">
+      <div class="sk sk-li-icon"></div>
+      <div class="sk-li-text">
+        <div class="sk sk-li-title"></div>
+        <div class="sk sk-li-sub"></div>
+      </div>
+      <div class="sk sk-li-arrow"></div>
+    </div>
+
+    <div class="sk-item">
+      <div class="sk sk-li-icon"></div>
+      <div class="sk-li-text">
+        <div class="sk sk-li-title" style="width:48%"></div>
+      </div>
+      <div class="sk sk-li-arrow"></div>
+    </div>
+
+    <div class="sk-item">
+      <div class="sk sk-li-icon"></div>
+      <div class="sk-li-text">
+        <div class="sk sk-li-title"></div>
+        <div class="sk sk-li-sub"></div>
+      </div>
+      <div class="sk sk-li-arrow"></div>
+    </div>
+
+    <div class="sk-item">
+      <div class="sk sk-li-icon"></div>
+      <div class="sk-li-text">
+        <div class="sk sk-li-title"></div>
+        <div class="sk sk-li-sub"></div>
+      </div>
+      <div class="sk sk-li-arrow"></div>
+    </div>
+  </div>
+
+  <div class="sk-bottom-gap"></div>
+</div>
+
+<!-- ТВОЙ LOADING OVERLAY (на переход) -->
+<div id="loading-overlay">
+  <div id="progress-screen">
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+    </div>
+  </div>
+  <div id="photo-screen">
+    <img src="main/loading.png" alt="" id="loading-photo">
+  </div>
+</div>
+
+<div class="header-top">
+  <button class="header-back" type="button" onclick="location.href='index.html'">
+    <img src="./main/kaspi.kz_files/arrow.png" alt="">
+  </button>
+  <div class="header-title">Госуслуги</div>
+  <div style="width: 24px;"></div>
+</div>
+
+<div class="tabs-container">
+  <div class="tabs-bg">
+    <div class="tab active">Все услуги</div>
+    <div class="tab">Мои заявки</div>
+  </div>
+</div>
+
+<div class="search-container">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <span class="search-text">Поиск по Госуслугам</span>
+  </div>
+</div>
+
+<div class="gos-docs-section">
+    <div class="gos-docs-scroll">
+        <div class="gos-doc-card" id="id-card-link" style="cursor:pointer;"><img src="udost.png" class="gos-doc-img"><div class="gos-doc-title">Удостоверение личности</div></div>
+        <div class="gos-doc-card"><img src="passport-icon.png" class="gos-doc-img"><div class="gos-doc-title">Паспорт гражданина РК</div></div>
+        <div class="gos-doc-card"><img src="student-icon.png" class="gos-doc-img"><div class="gos-doc-title">Студенческий билет</div></div>
+    </div>
+    <a href="#" style="display:flex; align-items:center; justify-content:space-between; padding: 0 15px 5px; font-size:15px; color:#3875bf; text-decoration:none;">
+        <span>Все документы</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3875bf" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+</div>
+            <div class="gos-cats-section">
+                <div class="gos-cats-scroll">
+                    <div class="gos-cat-item active"><div class="gos-cat-icon-bg"><img src="popular.png" class="gos-cat-icon"></div><div class="gos-cat-title">Популярные</div></div>
+                    <div class="gos-cat-item"><div class="gos-cat-icon-bg"><img src="spravki.png" class="gos-cat-icon"></div><div class="gos-cat-title">Справки</div></div>
+                    <div class="gos-cat-item"><div class="gos-cat-icon-bg"><img src="avto.png" class="gos-cat-icon"></div><div class="gos-cat-title">Авто</div></div>
+                    <div class="gos-cat-item"><div class="gos-cat-icon-bg"><img src="house.png" class="gos-cat-icon"></div><div class="gos-cat-title">Жилье</div></div>
+                </div>
+            </div>
+
+            <div class="gos-list-section">
+                <div class="gos-list-title">Популярные и новые</div>
+                <div class="gos-list-item" onclick="vibrate()"><div class="gos-list-icon-wrapper"><img src="samozanyat.png" class="gos-list-icon"></div><div class="gos-list-text"><div class="gos-list-item-title">Стать самозанятым</div><div class="gos-list-item-sub">Открыть счет и начать принимать оплату</div></div><div class="gos-badge">NEW</div><div class="gos-arrow">›</div></div>
+                <div class="gos-list-item" onclick="vibrate()"><div class="gos-list-icon-wrapper"><img src="izmenenierekvizitov.png" class="gos-list-icon"></div><div class="gos-list-text"><div class="gos-list-item-title">Изменение реквизитов и режима ИП</div></div><div class="gos-badge">NEW</div><div class="gos-arrow">›</div></div>
+                <div class="gos-list-item" onclick="vibrate()"><div class="gos-list-icon-wrapper"><img src="pereofomravto.png" class="gos-list-icon"></div><div class="gos-list-text"><div class="gos-list-item-title">Переоформление автомобиля</div></div><div class="gos-arrow">›</div></div>
+                <div class="gos-list-item" onclick="resetUdost()"><div class="gos-list-icon-wrapper"><img src="propiska.png" class="gos-list-icon"></div><div class="gos-list-text"><div class="gos-list-item-title">Прописка</div><div class="gos-list-item-sub">Временная и постоянная</div></div><div class="gos-arrow">›</div></div>
+                <div class="gos-list-item" onclick="vibrate()"><div class="gos-list-icon-wrapper"><img src="zamenaprav.png" class="gos-list-icon"></div><div class="gos-list-text"><div class="gos-list-item-title">Замена водительских прав</div></div><div class="gos-arrow">›</div></div>
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>
+
+<nav class="nav-bar">
+  <a href="#" class="nav-item">
+    <div class="nav-icon"><img src="home-goods-500.svg" class="gray-filter"></div>
+    Главная
+  </a>
+  <a href="#" class="nav-item">
+    <div class="nav-icon"><img src="scan-qr-500.svg" class="gray-filter"></div>
+    Kaspi QR
+  </a>
+  <a href="#" class="nav-item">
+    <div class="nav-icon">
+      <img src="chat-500.svg" class="gray-filter">
+      <div class="badge">1</div>
+    </div>
+    Сообщения
+  </a>
+  <a href="#" class="nav-item active">
+    <div class="nav-icon"><img src="file-500.svg" class="red-filter"></div>
+    Сервисы
+  </a>
+</nav>
+
+<script>
+/* ПРОВЕРКА ДОСТУПА */
+(async function checkAccess() {
+  try {
+    const r = await fetch('/.netlify/functions/check-access', { credentials: 'include' });
+    if (r.ok) {
+      const data = await r.json();
+      if (!data.hasAccess) {
+        // removed;
+        return;
+      }
+    } else {
+      // removed;
+      return;
+    }
+  } catch (e) {
+    console.error('Access check error:', e);
+    // removed;
+    return;
+  }
+})();
+
+function resetUdost() {
+  localStorage.removeItem('uploadedImage');
+  for (let i = 0; i < 20; i++) {
+    const key = 'rekvizit' + i;
+    if (localStorage.getItem(key)) localStorage.removeItem(key);
+  }
+  localStorage.removeItem('rekvizitSaved');
+  if (window.Telegram && Telegram.WebApp) Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const idCardLink = document.getElementById('id-card-link');
+  const loadingOverlay = document.getElementById('loading-overlay');
+  const progressScreen = document.getElementById('progress-screen');
+  const progressBar = document.getElementById('progress-bar');
+  const photoScreen = document.getElementById('photo-screen');
+  const loadingPhoto = document.getElementById('loading-photo');
+
+  if (idCardLink) {
+    idCardLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      loadingOverlay.style.display = 'block';
+      progressScreen.style.display = 'flex';
+      photoScreen.style.display = 'none';
+      progressBar.style.width = '0%';
+      document.body.style.overflow = 'hidden';
+
+      const img = new Image();
+      img.src = 'main/loading.png';
+
+      img.onload = function() {
+        loadingPhoto.src = 'main/loading.png';
+        startLoadingAnimation();
+      };
+
+      img.onerror = function() {
+        photoScreen.innerHTML = '';
+        photoScreen.style.backgroundColor = '#ffffff';
+        startLoadingAnimation();
+      };
+
+      function startLoadingAnimation() {
+        setTimeout(() => {
+          progressBar.style.width = '100%';
+          setTimeout(() => {
+            progressScreen.style.display = 'none';
+            photoScreen.style.display = 'flex';
+            setTimeout(() => {
+              document.body.style.overflow = '';
+              window.location.href = 'main/1112.html';
+            }, 2500);
+          }, 900);
+        }, 10);
+      }
+    });
+  }
+
+  const marriageResetBtn = document.getElementById('marriage-reset');
+  if (marriageResetBtn) {
+    marriageResetBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      resetUdost();
+      const originalBg = marriageResetBtn.style.backgroundColor;
+      marriageResetBtn.style.backgroundColor = '#f2f2f2';
+      setTimeout(() => { marriageResetBtn.style.backgroundColor = originalBg; }, 300);
+    });
+  }
+});
+
+/* SKELETON HIDE */
+(function(){
+  const sk = document.getElementById('skeleton');
+  if (!sk) return;
+
+  function whenReady(){
+    const imgs = Array.from(document.images || []);
+    const waits = imgs.map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise(res => {
+        img.addEventListener('load', res, { once:true });
+        img.addEventListener('error', res, { once:true });
+      });
+    });
+
+    const fontsReady = (document.fonts && document.fonts.ready)
+      ? document.fonts.ready.catch(() => {})
+      : Promise.resolve();
+
+    return Promise.all([Promise.all(waits), fontsReady]);
+  }
+
+  const MIN_SHOW_MS = 250;
+  const start = Date.now();
+
+  whenReady().then(() => {
+    const left = Math.max(0, MIN_SHOW_MS - (Date.now() - start));
+    setTimeout(() => {
+      sk.classList.add('is-hidden');
+      setTimeout(() => sk.remove(), 260);
+    }, left);
+  });
+})();
+</script>
+
+<script src="anti-capture.js"></script>
+</body>
+</html>

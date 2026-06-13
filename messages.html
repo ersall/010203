@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,maximum-scale=1">
+  <meta name="robots" content="none">
+  <title>Сообщения — Kaspi.kz</title>
+  <link rel="stylesheet" href="app-common.css">
+  <link rel="stylesheet" href="payments.css">
+  <style>
+    .msg-page { max-width: 500px; margin: 0 auto; min-height: 100vh; padding-bottom: 78px; }
+    .msg-header { padding: 16px 14px; font-size: 20px; font-weight: 700; }
+    .msg-empty { padding: 40px 20px; text-align: center; color: #8a8a8e; font-size: 15px; }
+  </style>
+</head>
+<body class="pay-body">
+<div class="msg-page">
+  <div class="msg-header">Сообщения</div>
+  <div class="msg-empty">Нет новых сообщений</div>
+
+  <nav class="pay-nav">
+    <a href="/"><img src="homeq.svg" class="gray-filter" alt="">Главная</a>
+    <a href="#" class="active" data-kaspi-qr><img src="scan-qr-500.svg" class="red-filter" alt="">Kaspi QR</a>
+    <a class='active' href='/messages'><img src="chat-500.svg" class="red-filter" alt="">Сообщения</a>
+    <a href='/serv'><img src="serv.svg" class="gray-filter" alt="">Сервисы</a>
+  </nav>
+</div>
+
+<div class="pay-overlay" id="cameraModal">
+  <div class="pay-modal">
+    <div class="pay-modal-body">Нет доступа к камере.<br><br>Перейдите в настройки телефона и измените параметры приложения.</div>
+    <div class="pay-modal-actions">
+      <button type="button" id="closeCameraModal">OK</button>
+    </div>
+  </div>
+</div>
+
+<script src="app-common.js"></script>
+<script src="payments.js"></script>
+<script>
+document.getElementById('closeCameraModal').onclick = function () {
+  document.getElementById('cameraModal').classList.remove('open');
+};
+</script>
+</body>
+</html>
