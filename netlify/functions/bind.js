@@ -36,6 +36,7 @@ exports.handler = async (event) => {
         return { statusCode: 401, body: "Code expired" };
     }
 
+    // Удаляем использованный код
     await fetch(`${url}/del/code:${code}`, {
         headers: { Authorization: `Bearer ${token}` }
     });
