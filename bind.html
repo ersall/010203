@@ -73,20 +73,20 @@
     #st { margin-top:12px; font-size:14px; min-height:18px; }
     .sep { margin:14px 0 10px; height:1px; background:#eceef2; }
     .muted { opacity:.7; }
-  .disclaimer {
-  margin: 15px 0;
-  padding: 12px 16px;
-  background: #f8f9fa;
-  border-radius: 12px;
-  border: 1px solid #e9ecef;
-  font-size: 13px;
-  color: #495057;
-  text-align: center;
-  line-height: 1.4;
-}
-.disclaimer p {
-  margin: 0;
-}
+    .disclaimer {
+      margin: 14px 0 0;
+      padding: 10px 12px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      border: 1px solid #e9ecef;
+      font-size: 11px;
+      color: #6c757d;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .disclaimer strong {
+      color: #495057;
+    }
   </style>
 </head>
 <body>
@@ -99,17 +99,18 @@
     <input id="code" placeholder="------" inputmode="numeric" maxlength="6" autofocus />
     <button class="btn btn-primary" id="go">Подтвердить код</button>
     <div id="st" class="muted"></div>
+    
+    <div class="disclaimer">
+      <strong>Уведомление:</strong> Этот сайт является независимой демонстрационной версией и не является официальным приложением АО «Kaspi.kz». Мы не собираем, не храним и не обрабатываем персональные данные пользователей. Все платёжные и идентификационные функции являются имитацией и не несут юридической силы. Продолжая использование, вы подтверждаете, что осведомлены об этом.
+    </div>
+
     <div class="sep"></div>
-    <p class="muted">Нет кода - напишите в Telegram для получения доступа</p>
+    <p class="muted">Нет кода — напишите в Telegram для получения доступа</p>
     <a class="btn btn-primary" style="background:#0088cc; display:block; text-decoration:none; color:#fff; line-height:20px; text-align:center;" href="https://t.me/alexa_martine" target="_blank">
       Написать @alexa_martine
     </a>
   </div>
 
-  <div class="disclaimer">
-  <p>⚠️ Этот сайт — творческая пародия на приложение Kaspi.kz. Он не является официальным банковским приложением, не запрашивает ваши реальные данные и не взаимодействует с платёжными системами. Вся ваша «прибыль» здесь — это хорошее настроение.</p>
-</div>
-  
 <script>
   const st = document.getElementById("st");
   const input = document.getElementById("code");
